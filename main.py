@@ -1,7 +1,10 @@
 # 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna atak 5 kolumna broń 5 kolumna amunicja 6 kolumna przładowyanie 7 kolumna max amunicji 8 kolumna ruch/max	9 kolmna czy jest to karta jedno razowa 10	czy jest tylko na daną jednostke
+import io
+import sys
 import csv
 import random
 
+sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 karty = []
 karty_gracza = [[], [], []]  
 aktualny_gracz = 1
@@ -120,6 +123,8 @@ while True:
     else:
         aktualny_gracz = 1
 #nie usuwać pomysły
-# zeby bylo widac ile ma aktulanie hp
-# ile gracz ma ataku
-# podzielic atak : liczba kart
+#amunicje z przeładywniem
+#ruch
+#wczytać reszte kart
+#podzielic karty na jednorazowe i niejednorazowe 
+#podzielic karty na obronne i ofensywne
