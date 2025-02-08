@@ -3,8 +3,7 @@ import csv
 import random
 
 karty = []
-karty_gracza1 = []
-karty_gracza2 = []
+karty_gracza = [[], [], []]  
 aktualny_gracz = 1
 
 
@@ -49,7 +48,7 @@ def proponowane_Karty():
 
 
 def wyborKart():
-    wybor = input(f"Wpisz które wybierasz:")
+    wybor = input(f"Wpisz którą karte wybierasz:")
     karty_wybrane = wybor.split(",")
     print(karty_wybrane)
     return karty_wybrane
@@ -57,54 +56,63 @@ def wyborKart():
 
 def usuwanieIDodawanieKart(proponowane_karty, karty_wybrane):
     for i in karty_wybrane:
-        karta_dla_gracza1 = proponowane_karty.pop(int(i) - 1)
-        if aktualny_gracz == 1:
-            karty_gracza1.append(karta_dla_gracza1)
-        else:
-            karty_gracza2.append(karta_dla_gracza1)
+        karta_dla_gracza = proponowane_karty.pop(int(i) - 1)
+        karty_gracza[aktualny_gracz].append(karta_dla_gracza)  
 
     for a in proponowane_karty:
-        karty.append(proponowane_karty.pop())
+        karty.append(a)  
+
 
 def atakuj():
     if aktualny_gracz == 2:
         hp = 0
-        for karta in karty_gracza1:
+        for karta in karty_gracza[1]:
             hp += karta.hp
         atak = 0
-        for karta in karty_gracza2:
+        for karta in karty_gracza[2]:
             atak += karta.atak
-        liczba_kart = len(karty_gracza1)
-        karta.hp -= atak / liczba_kart
-        for karta in karty_gracza1:
-            karta.hp -= atak / liczba_kart
-            if karta.hp < 0 or karta.hp == 0:
-                karty_gracza1.remove(karta)
+        liczba_kart = len(karty_gracza[1])
+        
+        if liczba_kart > 0: 
+          for karta in karty_gracza[1]:
+              karta.hp -= atak / liczba_kart
+              if karta.hp <= 0: 
+                  karty_gracza[1].remove(karta)
+
 
     if aktualny_gracz == 1:
         hp = 0
-        for karta in karty_gracza2:
+        for karta in karty_gracza[2]:
             hp += karta.hp
         atak = 0
-        for karta in karty_gracza1:
+        for karta in karty_gracza[1]:
             atak += karta.atak
-        liczba_kart = len(karty_gracza2)
-        for karta in karty_gracza2:
-            karta.hp -= atak / liczba_kart
-            if karta.hp < 0 or karta.hp == 0:
-                karty_gracza2.remove(karta)
-# zeby bylo widac ile ma aktulanie hp
-# ile gracz ma ataku
-# podzielic atak : liczba kart
+        liczba_kart = len(karty_gracza[2])
+
+        if liczba_kart > 0:  
+          for karta in karty_gracza[2]:
+              karta.hp -= atak / liczba_kart
+              if karta.hp <= 0: 
+                  karty_gracza[2].remove(karta)
+
+
+
+def jakie_masz_karty(aktualny_gracz):
+    print(f'Gracz {aktualny_gracz} ma takie karty:')
+    for karta in karty_gracza[aktualny_gracz]:
+        print(karta.name)
+        print(f'Atak: {karta.atak}')
+        print(f'HP: {karta.hp}')
+
 
 while True:
     proponowane_karty = proponowane_Karty()
     karty_wybrane = wyborKart()
     usuwanieIDodawanieKart(proponowane_karty, karty_wybrane)
-
-    odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika?")
-    if odpowiedź_gracza == "tak":
-        print("Zaatakowałes przeciwnika!")
+    jakie_masz_karty(aktualny_gracz) 
+    odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
+    if odpowiedź_gracza.lower() == "tak":  
+        print("Zaatakowałeś przeciwnika!")
         atakuj()
 
     if aktualny_gracz == 1:
