@@ -119,3 +119,7 @@ while True:
         aktualny_gracz = 2
     else:
         aktualny_gracz = 1
+#nie usuwać pomysły
+# zeby bylo widac ile ma aktulanie hp
+# ile gracz ma ataku
+# podzielic atak : liczba kart
