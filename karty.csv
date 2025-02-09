@@ -6,3 +6,8 @@ helikopter,3,atak,50,20,rakiety	rakiety,2,20,6,0,nie
 samolot,2,atak,0,100,bomby,bomby,0,0,0,1,ziemia
 działko anty powietrzne,3,atak,50,25,rakiety namierzane,rakiety namierzane,2,50,0,0,powietrze
 działko,3,atak,50,1,mashingan,zwykła,2,50,0,0,nie
+ulepszenia do bazy,1,ulepszenie,1,dodaje przed bazą rów							
+ulepszenia do bazy,1,ulepszenie,2,dodaje przed rowem drut kolczasty							
+ulepszenia do bazy,1,ulepszenie,3,dodaje do rowów mashingan, dodaje lądowisko dla helikopterów (max 2) 							
+ulepszenia do bazy,1,ulepszenie,4,dodaje działka w bazie 							
+ulepszenia do bazy,1,ulepszenie,5,dodaje rakiety do bazy i dodaje rakiety anty air							
