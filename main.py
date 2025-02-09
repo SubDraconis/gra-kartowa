@@ -1,4 +1,4 @@
-# 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna atak 5 kolumna broń 6 kolumna amunicja 7 kolumna przładowyanie 8 kolumna max amunicji 9 kolumna ruch/max	10 kolmna czy jest to karta jedno razowa 11	czy jest tylko na daną jednostke
+# 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna  5 kolumna broń 6 kolumna amunicja 7 kolumna przładowyanie 8 kolumna max amunicji 9 kolumna ruch/max	10 kolmna czy jest to karta jedno razowa 11	czy jest tylko na daną jednostke
 import io
 import sys
 import csv
@@ -72,19 +72,21 @@ def usuwanieIDodawanieKart(proponowane_karty, karty_wybrane):
 
 def postawienie_karty(karta):
     print(f'Postawiasz kartę {karta}')
-    if aktualny_gracz == 1:
-        karty_gracza[1].remove(karta)
-        postawienione_karty[1].append(karta) 
+    karty_gracza[aktualny_gracz].remove(karta)
+    postawienione_karty[aktualny_gracz].append(karta) 
 
 def atakuj(ktora_karta):
     print(f'Atakujesz przeciwnika')
+    atak=0
+    for karta in postawienione_karty[aktualny_gracz]:
+        if karta.name == ktora_karta:
+            atak = karta.atak
+    print (f"tyle masz ataku {atak}")
     if aktualny_gracz == 2:
         hp = 0
         for karta in postawienione_karty[1]:
             hp += karta.hp
-        atak = 0
-        for karta in postawienione_karty[2]:
-            atak += karta.atak
+    
         liczba_kart = len(postawienione_karty[1])
         
         if liczba_kart > 0: 
@@ -114,15 +116,20 @@ def przeładowanie(max_amunicja, amunicja, przeładowyanie):
     print(f'Przeładowujesz broń')        
 
 def jakie_masz_karty_reku(aktualny_gracz):
-    print(f'Gracz {aktualny_gracz} ma takie karty:')
+    print(f'Gracz {aktualny_gracz} ma takie karty w ręku:')
     for karta in karty_gracza[aktualny_gracz]:
+        print(karta.name)
+        print(f'Atak: {karta.atak}')
+        print(f'HP: {karta.hp}')
+    print(f'Gracz {aktualny_gracz} ma takie karty na polu:')
+    for karta in postawienione_karty[aktualny_gracz]:
         print(karta.name)
         print(f'Atak: {karta.atak}')
         print(f'HP: {karta.hp}')
 
 def szukaj_karty_po_nazwie(nazwa):
     for karta in karty_gracza[aktualny_gracz]:
-        print(karta.name)
+        print(f"szukanie karty {karta.name}")
         if karta.name == nazwa:
             return karta
     return None
@@ -132,14 +139,17 @@ while True:
     karty_wybrane = wyborKart()
     usuwanieIDodawanieKart(proponowane_karty, karty_wybrane)
     jakie_masz_karty_reku(aktualny_gracz) 
+
     odpowiedź_gracza = input("Czy chcesz postawić kartę? (tak/nie): ") 
     if odpowiedź_gracza.lower() == "tak":  
         ktora_karta = input(f"która kartę postawiasz?")
         znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
         if znaleziona_karta is not None:    
             postawienie_karty(znaleziona_karta)
+            
     odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
     if odpowiedź_gracza.lower() == "tak":  
+        znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
         ktora_karta = input(f"która kartą atakujesz?")
         atakuj(ktora_karta)
 
