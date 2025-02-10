@@ -1,8 +1,8 @@
 żołnierz,5,atak,10,5,karabin,zwykła,1,90,5,0,nie
 snajper,4,atak,10,10,snaperka,cieżka,1,9,5,0,nie
 moździerz,2,atak,5,20,moździerz,wybuchowa,3,10,2,0,nie
-czołg,1,atak,100,50,lufa,amunicja wybuchowa,4,20,3,0,nie
+czołg,1,atak,100,50,lufa,amunicja_wybuchowa,4,20,3,0,nie
 helikopter,3,atak,50,20,rakiety	rakiety,2,20,6,0,nie
 samolot,2,atak,0,100,bomby,bomby,0,0,0,1,ziemia
-działko anty powietrzne,3,atak,50,25,rakiety namierzane,rakiety namierzane,2,50,0,0,powietrze
+działko anty powietrzne,3,atak,50,25,rakiety namierzane,rakiety_namierzane,2,50,0,0,powietrze
 działko,3,atak,50,1,mashingan,zwykła,2,50,0,0,nie
