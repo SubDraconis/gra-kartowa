@@ -1,4 +1,4 @@
-# 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna  5 kolumna broń 6 kolumna amunicja 7 kolumna przładowyanie 8 kolumna max amunicji 9 kolumna ruch/max	10 kolmna czy jest to karta jedno razowa 11	czy jest tylko na daną jednostke
+# 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna  5 kolumna broń 6 kolumna amunicja 7 kolumna przeładowyanie 8 kolumna max amunicji 9 kolumna ruch/max	10 kolmna czy jest to karta jedno razowa 11	czy jest tylko na daną jednostke
 import io
 import sys
 import csv
@@ -12,16 +12,18 @@ aktualny_gracz = 1
 
 
 class Card:
-    def __init__(self, type, name, atak, hp, maxa_ammo, ammo):
+    def __init__(self, type, name, atak, hp, maxa_ammo, ammo, przeładowyanie):
         self.name = name
         self.type = type
         self.atak = int(atak)
         self.hp = int(hp)
         self.maxa_ammo = int(maxa_ammo)
         self.ammo = str(ammo)
+        self.przeładowyanie = int(przeładowyanie)
+        self.przeładowywania_czas=0
         
     def __str__(self):
-        return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo}'
+        return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie}'
 
 
 def read_cards():
@@ -30,7 +32,7 @@ def read_cards():
         for row in reader:
                 for i in range(int(row[1])):
                     try:
-                        karty.append(Card(row[2], row[0], row[4], row[3], row[8], row[6]))
+                        karty.append(Card(row[2], row[0], row[4], row[3], row[8], row[6], row[7]))
                     except:
                         print(f"Nie udało się wczytać karty {row[0]}")
 
@@ -111,9 +113,13 @@ def atakuj(ktora_karta):
               if karta.hp <= 0: 
                   postawienione_karty[2].remove(karta)
 
-#chwilowo nie działa
-def przeładowanie(max_amunicja, amunicja, przeładowyanie):
-    print(f'Przeładowujesz broń')        
+def przeładowanie(karta):
+        karta.przeładowywania_czas += 1
+        if karta.przeładowywania_czas == karta.przeładowyanie:
+            karta.przeładowywania_czas = 0
+            return True
+        else:
+            return False
 
 def jakie_masz_karty_reku(aktualny_gracz):
     print(f'Gracz {aktualny_gracz} ma takie karty w ręku:')
@@ -147,12 +153,15 @@ while True:
         if znaleziona_karta is not None:    
             postawienie_karty(znaleziona_karta)
             
+            
     odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
     if odpowiedź_gracza.lower() == "tak":  
-        znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
         ktora_karta = input(f"która kartą atakujesz?")
-        atakuj(ktora_karta)
-
+        znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
+        atakuj(znaleziona_karta)
+    for karta in postawienione_karty[aktualny_gracz]:
+        znaleziona_karta=szukaj_karty_po_nazwie(karta)
+        przeładowanie(znaleziona_karta)
     if aktualny_gracz == 1:
         aktualny_gracz = 2
     else:
