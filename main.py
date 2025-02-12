@@ -9,7 +9,7 @@ karty = []
 karty_gracza = [[], [], []]  
 postawienione_karty= [[], [], []]
 aktualny_gracz = 1
-
+karty_ladowane = []
 
 class Card:
     def __init__(self, type, name, atak, hp, maxa_ammo, ammo, przeładowyanie):
@@ -23,7 +23,7 @@ class Card:
         self.przeładowywania_czas=0
         
     def __str__(self):
-        return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie}'
+        return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie} {self.przeładowywania_czas}'
 
 
 def read_cards():
@@ -112,11 +112,15 @@ def atakuj(ktora_karta):
               karta.hp -= atak / liczba_kart
               if karta.hp <= 0: 
                   postawienione_karty[2].remove(karta)
+    karty_ladowane.extend(ktora_karta)
+    print(f"{karty_ladowane} atakujesz przeciwnika")
 
 def przeładowanie(karta):
         karta.przeładowywania_czas += 1
         if karta.przeładowywania_czas == karta.przeładowyanie:
             karta.przeładowywania_czas = 0
+            karty_ladowane.remove(karta)
+            print(f"Karta {karta.name} została przeładowana")
             return True
         else:
             return False
@@ -159,9 +163,10 @@ while True:
         ktora_karta = input(f"która kartą atakujesz?")
         znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
         atakuj(znaleziona_karta)
+        karty_ladowane.append(znaleziona_karta)
     for karta in postawienione_karty[aktualny_gracz]:
         znaleziona_karta=szukaj_karty_po_nazwie(karta)
-        przeładowanie(znaleziona_karta)
+        przeładowanie(karta)
     if aktualny_gracz == 1:
         aktualny_gracz = 2
     else:
