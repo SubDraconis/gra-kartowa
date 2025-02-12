@@ -112,9 +112,7 @@ def atakuj(ktora_karta):
               karta.hp -= atak / liczba_kart
               if karta.hp <= 0: 
                   postawienione_karty[2].remove(karta)
-    karty_ladowane.extend(ktora_karta)
-    print(f"{karty_ladowane} atakujesz przeciwnika")
-
+'''
 def przeładowanie(karta):
         karta.przeładowywania_czas += 1
         if karta.przeładowywania_czas == karta.przeładowyanie:
@@ -124,7 +122,7 @@ def przeładowanie(karta):
             return True
         else:
             return False
-
+'''
 def jakie_masz_karty_reku(aktualny_gracz):
     print(f'Gracz {aktualny_gracz} ma takie karty w ręku:')
     for karta in karty_gracza[aktualny_gracz]:
