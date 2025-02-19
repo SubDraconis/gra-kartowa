@@ -21,6 +21,7 @@ class Card:
         self.ammo = str(ammo)
         self.przeładowyanie = int(przeładowyanie)
         self.przeładowywania_czas=0
+        self.czy_wystrzelony = False
         
     def __str__(self):
         return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie} {self.przeładowywania_czas}'
@@ -96,7 +97,7 @@ def atakuj(ktora_karta):
               karta.hp -= atak / liczba_kart
               if karta.hp <= 0: 
                   postawienione_karty[1].remove(karta)
-
+    ktora_karta.czy_wystrzelony = True
 
     if aktualny_gracz == 1:
         hp = 0
@@ -112,17 +113,14 @@ def atakuj(ktora_karta):
               karta.hp -= atak / liczba_kart
               if karta.hp <= 0: 
                   postawienione_karty[2].remove(karta)
-'''
+
 def przeładowanie(karta):
+    if karta.przeładowywania_czas == karta.przeładowyanie:
+        karta.czy_wystrzelony = False
+        karta.przeładowywania_czas = 0
+    else:
         karta.przeładowywania_czas += 1
-        if karta.przeładowywania_czas == karta.przeładowyanie:
-            karta.przeładowywania_czas = 0
-            karty_ladowane.remove(karta)
-            print(f"Karta {karta.name} została przeładowana")
-            return True
-        else:
-            return False
-'''
+
 def jakie_masz_karty_reku(aktualny_gracz):
     print(f'Gracz {aktualny_gracz} ma takie karty w ręku:')
     for karta in karty_gracza[aktualny_gracz]:
@@ -140,6 +138,10 @@ def szukaj_karty_po_nazwie(nazwa):
         print(f"szukanie karty {karta.name}")
         if karta.name == nazwa:
             return karta
+    for karta in postawienione_karty[aktualny_gracz]:
+        print(f"szukanie karty {karta.name}")
+        if karta.name == nazwa:
+            return karta
     return None
 
 while True:
@@ -148,27 +150,45 @@ while True:
     usuwanieIDodawanieKart(proponowane_karty, karty_wybrane)
     jakie_masz_karty_reku(aktualny_gracz) 
 
-    odpowiedź_gracza = input("Czy chcesz postawić kartę? (tak/nie): ") 
-    if odpowiedź_gracza.lower() == "tak":  
-        ktora_karta = input(f"która kartę postawiasz?")
-        znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
-        if znaleziona_karta is not None:    
-            postawienie_karty(znaleziona_karta)
-            
-            
-    odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
-    if odpowiedź_gracza.lower() == "tak":  
-        ktora_karta = input(f"która kartą atakujesz?")
-        znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
-        atakuj(znaleziona_karta)
-        karty_ladowane.append(znaleziona_karta)
+    #postawinie karty
+    poprawne=False
+    if len(karty_gracza[aktualny_gracz]) > 0:    
+        odpowiedź_gracza = input("Czy chcesz postawić kartę? (tak/nie): ")     
+        if odpowiedź_gracza.lower() == "tak":  
+            while poprawne==False:    
+                ktora_karta = input(f"która kartę postawiasz?")
+                znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
+                if znaleziona_karta is not None:    
+                    postawienie_karty(znaleziona_karta)
+                    poprawne=True
+                else:
+                    print("nie ma takiej")
+
+    #atak        
+    if len(postawienione_karty[aktualny_gracz]) > 0:    
+        poprawne=False
+        odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
+        if odpowiedź_gracza.lower() == "tak":  
+            while poprawne==False:
+                ktora_karta = input(f"która kartą atakujesz?")
+                znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
+                print(znaleziona_karta)
+                if znaleziona_karta is not None:
+                    atakuj(znaleziona_karta)
+                    karty_ladowane.append(znaleziona_karta)
+                    poprawne=True
+                else:
+                    print("nie ma takiej")
+
+    #przeładowanie
     for karta in postawienione_karty[aktualny_gracz]:
-        znaleziona_karta=szukaj_karty_po_nazwie(karta)
-        przeładowanie(karta)
+        if karta.czy_wystrzelony:
+            przeładowanie(karta)
     if aktualny_gracz == 1:
         aktualny_gracz = 2
     else:
         aktualny_gracz = 1
+    print("udało się przeładować")
 #nie usuwać pomysły
 #amunicje z przeładywniem
 #ruch
