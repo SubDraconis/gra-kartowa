@@ -1,4 +1,4 @@
-# 0 kolumna nazwa 1 kolumna liczba 2 kolumna typ 3 kolumna hp 4 kolumna  5 kolumna broń 6 kolumna amunicja 7 kolumna przeładowyanie 8 kolumna max amunicji 9 kolumna ruch/max	10 kolmna czy jest to karta jedno razowa 11	czy jest tylko na daną jednostke
+#0 nazwa 1ile kart w tali 2typ kart 3hp 4obrażenia 5typ broni 6amunicja	7przeładowywanie 8max amunicji	9ruch/max 10jednorazowa	11czy jest tylko na daną jednostke
 import io
 import sys
 import csv
@@ -190,7 +190,6 @@ while True:
         aktualny_gracz = 1
     print("udało się przeładować")
 #nie usuwać pomysły
-#amunicje z przeładywniem
 #ruch
 #wczytać reszte kart
 #podzielic karty na jednorazowe i niejednorazowe 
