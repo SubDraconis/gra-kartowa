@@ -3,6 +3,7 @@ import io
 import sys
 import csv
 import random
+import pygame
 
 sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 karty = []
@@ -31,7 +32,7 @@ def read_cards():
     with open('karty.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
-                for i in range(int(row[1])):
+                for _ in range(int(row[1])):
                     try:
                         karty.append(Card(row[2], row[0], row[4], row[3], row[8], row[6], row[7]))
                     except:
@@ -144,7 +145,26 @@ def szukaj_karty_po_nazwie(nazwa):
             return karta
     return None
 
+#pygame
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+obrazek_tla=pygame.image.load("tło.png")
+pygame.display.set_caption("Karcianka")
+
+
+
+run = True
 while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        
+    screen.blit(obrazek_tla, (self.image.get.width, 0))
+    pygame.display.update()
+
+
+
+
     proponowane_karty = proponowane_Karty()
     karty_wybrane = wyborKart()
     usuwanieIDodawanieKart(proponowane_karty, karty_wybrane)
