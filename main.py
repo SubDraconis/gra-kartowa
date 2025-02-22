@@ -145,25 +145,10 @@ def szukaj_karty_po_nazwie(nazwa):
             return karta
     return None
 
-#pygame
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
-obrazek_tla=pygame.image.load("tło.png")
-pygame.display.set_caption("Karcianka")
 
 
 
-run = True
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        
-    screen.blit(obrazek_tla, (self.image.get.width, 0))
-    pygame.display.update()
-
-
-
 
     proponowane_karty = proponowane_Karty()
     karty_wybrane = wyborKart()
