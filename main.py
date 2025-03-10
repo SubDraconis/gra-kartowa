@@ -23,6 +23,7 @@ class Card:
         self.przeładowyanie = int(przeładowyanie)
         self.przeładowywania_czas=0
         self.czy_wystrzelony = False
+        self.obrazek = pygame.image.load(f'karty/{name}.png')
         
     def __str__(self):
         return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie} {self.przeładowywania_czas}'
