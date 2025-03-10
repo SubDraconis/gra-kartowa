@@ -5,7 +5,7 @@ czy_gra = True
 okno_szerokosc = 800 # Zapamiętaj szerokość okna
 okno_wysokosc = 600
 okno = pygame.display.set_mode((okno_szerokosc, okno_wysokosc)) # Rozmiar okna nadal inicjujemy
-pygame.display.set_caption("Gra - Skalowanie do szerokości - POPRAWIONE")
+pygame.display.set_caption("Gra")
 
 ścieżka_obrazu = "tlo.png" # Ścieżka do Twojego obrazu tła
 
