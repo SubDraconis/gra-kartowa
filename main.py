@@ -1,17 +1,16 @@
-#0 nazwa 1ile kart w tali 2typ kart 3hp 4obrażenia 5typ broni 6amunicja	7przeładowywanie 8max amunicji	9ruch/max 10jednorazowa	11czy jest tylko na daną jednostke
 import io
 import sys
 import csv
 import random
-import pygame
+import pygame  # Importujemy pygame tutaj
 
-sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
-karty = []
-karty_gracza = [[], [], []]  
-postawienione_karty= [[], [], []]
-aktualny_gracz = 1
-karty_ladowane = []
+# Importujemy funkcje i klasy z okienka
+import okienko as ok
+import definicje as defi
 
+#sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+
+# --- Klasy (Card) ---
 class Card:
     def __init__(self, type, name, atak, hp, maxa_ammo, ammo, przeładowyanie):
         self.name = name
@@ -21,182 +20,57 @@ class Card:
         self.maxa_ammo = int(maxa_ammo)
         self.ammo = str(ammo)
         self.przeładowyanie = int(przeładowyanie)
-        self.przeładowywania_czas=0
+        self.przeładowywania_czas = 0
         self.czy_wystrzelony = False
-        self.obrazek = pygame.image.load(f'karty/{name}.png')
-        
+        self.obrazek = None  # Obrazek będzie ładowany w okienko.py
+
     def __str__(self):
         return f'{self.name} {self.type} {self.hp} {self.atak} {self.maxa_ammo} {self.ammo} {self.przeładowyanie} {self.przeładowywania_czas}'
 
+# --- Zmienne globalne (stan gry) ---
+karty = []
+karty_gracza = [[], [], []]
+postawienione_karty = [[], [], []]
+aktualny_gracz = 1
+koniec_gry = False
 
-def read_cards():
-    with open('karty.csv', newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        for row in reader:
-                for _ in range(int(row[1])):
-                    try:
-                        karty.append(Card(row[2], row[0], row[4], row[3], row[8], row[6], row[7]))
-                    except:
-                        print(f"Nie udało się wczytać karty {row[0]}")
-
-read_cards()
-random.shuffle(karty)
-'''for card in karty:
-    print(card)'''
-
-
-# pokaż graczowi 4 karty z wierzchu tablicy (z numerami 1 2 3 4)
-def proponowane_Karty():
-    proponowaneKarty = []
-    for i in range(4):
-        proponowanaKarta = karty.pop()
-        proponowaneKarty.append(proponowanaKarta)
-
-    print(f"Graczu nr {aktualny_gracz}, masz do wyboru takie karty: ", end=' ')
-    for numer, karta in enumerate(proponowaneKarty):
-        print(f"{numer+1}) {karta.name}, ", end=' ')
-    print()
-
-    return proponowaneKarty
-
-
-def wyborKart():
-    wybor = input(f"Wpisz którą karte wybierasz:")
-    karty_wybrane = wybor.split(",")
-    print(karty_wybrane)
-    return karty_wybrane
-
-
-def usuwanieIDodawanieKart(proponowane_karty, karty_wybrane):
-    for i in karty_wybrane:
-        karta_dla_gracza = proponowane_karty.pop(int(i) - 1)
-        karty_gracza[aktualny_gracz].append(karta_dla_gracza)  
-
-    for a in proponowane_karty:
-        karty.append(a)  
-
-def postawienie_karty(karta):
-    print(f'Postawiasz kartę {karta}')
-    karty_gracza[aktualny_gracz].remove(karta)
-    postawienione_karty[aktualny_gracz].append(karta) 
-
-def atakuj(ktora_karta):
-    print(f'Atakujesz przeciwnika')
-    atak=0
-    for karta in postawienione_karty[aktualny_gracz]:
-        if karta.name == ktora_karta:
-            atak = karta.atak
-    print (f"tyle masz ataku {atak}")
-    if aktualny_gracz == 2:
-        hp = 0
-        for karta in postawienione_karty[1]:
-            hp += karta.hp
+# --- Główna pętla gry (teraz w main.py) ---
+def run_game():
+    """Główna funkcja uruchamiająca grę (logika)."""
     
-        liczba_kart = len(postawienione_karty[1])
-        
-        if liczba_kart > 0: 
-          for karta in postawienione_karty[1]:
-              karta.hp -= atak / liczba_kart
-              if karta.hp <= 0: 
-                  postawienione_karty[1].remove(karta)
-    ktora_karta.czy_wystrzelony = True
 
-    if aktualny_gracz == 1:
-        hp = 0
-        for karta in postawienione_karty[2]:
-            hp += karta.hp
-        atak = 0
-        for karta in postawienione_karty[1]:
-            atak += karta.atak
-        liczba_kart = len(postawienione_karty[2])
 
-        if liczba_kart > 0:  
-          for karta in postawienione_karty[2]:
-              karta.hp -= atak / liczba_kart
-              if karta.hp <= 0: 
-                  postawienione_karty[2].remove(karta)
+    # Inicjalizacja gry
+    defi.init_game()
+    global koniec_gry, aktualny_gracz
 
-def przeładowanie(karta):
-    if karta.przeładowywania_czas == karta.przeładowyanie:
-        karta.czy_wystrzelony = False
-        karta.przeładowywania_czas = 0
-    else:
-        karta.przeładowywania_czas += 1
+    while not koniec_gry:
+        # Faza wyboru kart
+        proponowane = defi.proponowane_Karty()
+        wybrane = defi.wyborKart(proponowane, aktualny_gracz)
+        defi.usuwanieIDodawanieKart(proponowane, wybrane, aktualny_gracz)
 
-def jakie_masz_karty_reku(aktualny_gracz):
-    print(f'Gracz {aktualny_gracz} ma takie karty w ręku:')
-    for karta in karty_gracza[aktualny_gracz]:
-        print(karta.name)
-        print(f'Atak: {karta.atak}')
-        print(f'HP: {karta.hp}')
-    print(f'Gracz {aktualny_gracz} ma takie karty na polu:')
-    for karta in postawienione_karty[aktualny_gracz]:
-        print(karta.name)
-        print(f'Atak: {karta.atak}')
-        print(f'HP: {karta.hp}')
+        # Faza akcji
+        akcje = defi.pobierz_akcje_gracza(aktualny_gracz)
+        for akcja in akcje:
+            if akcja == "postaw":
+                defi.postaw_karte(aktualny_gracz)
+            elif akcja == "atakuj":
+                defi.atakuj(aktualny_gracz)
 
-def szukaj_karty_po_nazwie(nazwa):
-    for karta in karty_gracza[aktualny_gracz]:
-        print(f"szukanie karty {karta.name}")
-        if karta.name == nazwa:
-            return karta
-    for karta in postawienione_karty[aktualny_gracz]:
-        print(f"szukanie karty {karta.name}")
-        if karta.name == nazwa:
-            return karta
-    return None
+        # Faza przeładowania
+        defi.przeładowanie_kart(1)
+        defi.przeładowanie_kart(2)
+
+        defi.zmien_gracza()
 
 
 
+        # Sprawdzenie warunków końca gry
+        # TODO: Dodaj warunki końca gry
 
-while True:
+    print("Koniec gry!")
 
-    proponowane_karty = proponowane_Karty()
-    karty_wybrane = wyborKart()
-    usuwanieIDodawanieKart(proponowane_karty, karty_wybrane)
-    jakie_masz_karty_reku(aktualny_gracz) 
-
-    #postawinie karty
-    poprawne=False
-    if len(karty_gracza[aktualny_gracz]) > 0:    
-        odpowiedź_gracza = input("Czy chcesz postawić kartę? (tak/nie): ")     
-        if odpowiedź_gracza.lower() == "tak":  
-            while poprawne==False:    
-                ktora_karta = input(f"która kartę postawiasz?")
-                znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
-                if znaleziona_karta is not None:    
-                    postawienie_karty(znaleziona_karta)
-                    poprawne=True
-                else:
-                    print("nie ma takiej")
-
-    #atak        
-    if len(postawienione_karty[aktualny_gracz]) > 0:    
-        poprawne=False
-        odpowiedź_gracza = input("Czy chcesz zaatakować przeciwnika? (tak/nie): ") 
-        if odpowiedź_gracza.lower() == "tak":  
-            while poprawne==False:
-                ktora_karta = input(f"która kartą atakujesz?")
-                znaleziona_karta=szukaj_karty_po_nazwie(ktora_karta)
-                print(znaleziona_karta)
-                if znaleziona_karta is not None:
-                    atakuj(znaleziona_karta)
-                    karty_ladowane.append(znaleziona_karta)
-                    poprawne=True
-                else:
-                    print("nie ma takiej")
-
-    #przeładowanie
-    for karta in postawienione_karty[aktualny_gracz]:
-        if karta.czy_wystrzelony:
-            przeładowanie(karta)
-    if aktualny_gracz == 1:
-        aktualny_gracz = 2
-    else:
-        aktualny_gracz = 1
-    print("udało się przeładować")
-#nie usuwać pomysły
-#ruch
-#wczytać reszte kart
-#podzielic karty na jednorazowe i niejednorazowe 
-#podzielic karty na obronne i ofensywne
+# --- Funkcja main ---
+if __name__ == "__main__":
+    run_game()
