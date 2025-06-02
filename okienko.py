@@ -51,7 +51,7 @@ def skaluj_tlo_do_szerokosci_ekranu(sciezka_obrazu, szerokosc_ekranu):
     except pygame.error as e:
         print(f"Błąd skalowania tła: {e}")
         return None
-
+#--- brak obrazków kart w okienko.py---
 def zaladuj_obrazki_kart():
     """Ładuje obrazki dla kart (teraz w okienko.py)."""
     for karta in main.karty:  # Odwołujemy się do main.karty

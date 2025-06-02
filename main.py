@@ -2,12 +2,13 @@ import io
 import sys
 import csv
 import random
-import pygame  # Importujemy pygame tutaj
+import pygame 
 
 # Importujemy funkcje i klasy z okienka
 import okienko as ok
 import definicje as defi
 
+pygame.init()
 #sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
 # --- Klasy (Card) ---
@@ -34,7 +35,7 @@ postawienione_karty = [[], [], []]
 aktualny_gracz = 1
 koniec_gry = False
 
-# --- Główna pętla gry (teraz w main.py) ---
+# --- Główna pętla gry ---
 def run_game():
     """Główna funkcja uruchamiająca grę (logika)."""
     
@@ -64,8 +65,15 @@ def run_game():
 
         defi.zmien_gracza()
 
-
-
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                koniec_gry = True
+                break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F11:
+                    
+                        ok.skaluj_tlo_do_szerokosci_ekranu("tlo.png", 800)
+                    
         # Sprawdzenie warunków końca gry
         # TODO: Dodaj warunki końca gry
 
